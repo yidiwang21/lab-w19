@@ -18,7 +18,8 @@ exec(char *path, char **argv)
   struct proghdr ph;
   pde_t *pgdir, *oldpgdir;
   struct proc *curproc = myproc();
-
+  curproc->stack_pgs = 1; // added
+  
   begin_op();
 
   if((ip = namei(path)) == 0){
@@ -59,14 +60,14 @@ exec(char *path, char **argv)
   iunlockput(ip);
   end_op();
   ip = 0;
-
+  // changes  made here
   // Allocate two pages at the next page boundary.
   // Make the first inaccessible.  Use the second as the user stack.
   sz = PGROUNDUP(sz);
-  if((sz = allocuvm(pgdir, sz, sz + 2*PGSIZE)) == 0)
+  if((allocuvm(pgdir, STACKTOP - PGSIZE, STACKTOP)) == 0) //doing two page top
     goto bad;
-  clearpteu(pgdir, (char*)(sz - 2*PGSIZE));
-  sp = sz;
+  clearpteu(pgdir, (char*)(STACKTOP - PGSIZE));
+  sp = STACKTOP;
 
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {

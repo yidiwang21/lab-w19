@@ -77,6 +77,27 @@ trap(struct trapframe *tf)
             cpuid(), tf->cs, tf->eip);
     lapiceoi();
     break;
+  case T_PGFLT :;
+    // page fault trap handler
+    uint stack_bottom = STACKTOP - (myproc()->stack_pgs * PGSIZE);
+    uint new_bottem = stack_bottom - PGSIZE;
+    // pte_t *pte;
+
+    // if((pte = walkpgdir(myproc()->pgdir, (void *)new_bottem, 1)) == 0)
+    //   panic("copyuvm: pte should exist");
+    // if(!(*pte & PTE_P))
+    //   panic("copyuvm: page not present");
+    
+    if (rcr2() < STACKTOP - (myproc()->stack_pgs)*(PGSIZE)) {
+      if (allocuvm(myproc()->pgdir, new_bottem, stack_bottom) == 0) {
+        cprintf("case T_PGFLT from trap.c: allocuvm failed. Number of current allocated pages: %d\n", myproc()->stack_pgs);
+        exit();
+      }
+      clearpteu(myproc()->pgdir, (char *)new_bottem);
+      myproc()->stack_pgs++;
+      cprintf("case T_PGFLT from trap.c: allocuvm succeeded. Number of pages allocated: %d\n", myproc()->stack_pgs);
+    }
+    break;
 
   //PAGEBREAK: 13
   default:
