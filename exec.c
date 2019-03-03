@@ -18,7 +18,8 @@ exec(char *path, char **argv)
   struct proghdr ph;
   pde_t *pgdir, *oldpgdir;
   struct proc *curproc = myproc();
-  curproc->stack_pgs = 1; // added
+  // lab3 added here, init the number of pages in pcb
+  curproc->stack_pgs = 1;
   
   begin_op();
 
@@ -60,9 +61,8 @@ exec(char *path, char **argv)
   iunlockput(ip);
   end_op();
   ip = 0;
-  // changes  made here
-  // Allocate two pages at the next page boundary.
-  // Make the first inaccessible.  Use the second as the user stack.
+  // lab3 added here
+  // Allocate a single page at the next page boundary.
   sz = PGROUNDUP(sz);
   if((allocuvm(pgdir, STACKTOP - PGSIZE, STACKTOP)) == 0) //doing two page top
     goto bad;

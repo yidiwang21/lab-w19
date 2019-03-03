@@ -337,7 +337,8 @@ copyuvm(pde_t *pgdir, uint sz)
       goto bad;
   }
 
-  // lab3 added here to traverse pages
+  // lab3 added here 
+  // to traverse pages
   for(i = STACKTOP; i > STACKTOP - (curproc->stack_pgs)*PGSIZE; i -= PGSIZE){
     if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
       panic("copyuvm: pte should exist");
