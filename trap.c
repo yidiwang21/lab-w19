@@ -97,6 +97,8 @@ trap(struct trapframe *tf)
       myproc()->stack_pgs++;
       cprintf("case T_PGFLT from trap.c: allocuvm succeeded. Number of pages allocated: %d\n", myproc()->stack_pgs);
     }
+    //cprintf("Initial number of pages by the process: %d\n", myproc()->stack_pgs); //cs153 -Lab3
+
     break;
 
   //PAGEBREAK: 13
