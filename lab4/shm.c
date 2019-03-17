@@ -32,7 +32,6 @@ int shm_open(int id, char **pointer) {
 
   // lab4 added here
   // case 1
-  initlock(&(shm_table.lock), "SHM lock");
   acquire(&(shm_table.lock));
   int i;
   for (i = 0; i < 64; i++) {
@@ -78,7 +77,6 @@ int shm_open(int id, char **pointer) {
 int shm_close(int id) {
   //you write this too!
   // lab4 added here
-  initlock(&(shm_table.lock), "SHM lock");
   acquire(&(shm_table.lock));
   int i = 0;
   for (i = 0; i < 64; i++) {
