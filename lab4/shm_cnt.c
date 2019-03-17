@@ -32,7 +32,7 @@ shm_open(1,(char **)&counter);
 //print something because we are curious and to give a chance to switch process
      if(i%1000 == 0)
        printf(1,"Counter in %s is %d at address %x\n",pid? "Parent" : "Child", counter->cnt, counter);
-}
+  }
   
   if(pid)
      {
@@ -40,6 +40,7 @@ shm_open(1,(char **)&counter);
     wait();
     } else
     printf(1,"Counter in child is %d\n\n",counter->cnt);
+
 
 //shm_close: first process will just detach, next one will free up the shm_table entry (but for now not the page)
    shm_close(1);
